@@ -25,4 +25,18 @@ describe("Ball", function() {
     ball.render();
     expect($('body > #ball-1').length).toBeGreaterThan(0);
   })
+
+  it("will has expected dom arrtibutes", function() {
+    ball.render();
+    ballDom = $('#ball-1')[0];
+    expect(parseInt(ballDom.style.height.match(/\d+/)[0])).toEqual(ball.r * 2);
+    expect(parseInt(ballDom.style.width.match(/\d+/)[0])).toEqual(ball.r * 2);
+    expect(ballDom.style.position).toEqual('absolute');
+  })
+
+  it("will be drawed in expected position", function() {
+    ball.render();
+    pos = $('#ball-1').position();
+    expect([pos.top, pos.left]).toEqual(ball.position);
+  })
 });
