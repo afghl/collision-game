@@ -8,12 +8,13 @@ gulp.task('js', function() {
   var watcher = watchify(b);
   return watcher
    .on('update', function () {
-       watcher.bundle()
-       .pipe(source('collision-game.js'))
-       .pipe(gulp.dest('./dist/js'));
+     console.log('update');
+     watcher.bundle()
+     .pipe(source('collision-game.js'))
+     .pipe(gulp.dest('./dist/js'));
    })
    .bundle()
-   .pipe(source('./src/game.js'))
+   .pipe(source('collision-game.js'))
    .pipe(gulp.dest('./dist/js'));
 
 });
