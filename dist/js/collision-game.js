@@ -9845,7 +9845,9 @@ var Ball = (function() {
   }
 
   Ball.prototype.updateTemplate = function() {
-    return "<div id = " + this.domId + " style = \"position:absolute;top:" + this.position[0] + ";left:" + this.position[1] + ";height:" + this.r * 2 + "; width:" + this.r * 2 + "; border:1px solid; border-radius:" + this.r + "px\"" + "></div>" ;
+    positionLeft = this.position[0] - this.r;
+    positionTop = this.position[1] - this.r;
+    return "<div id = " + this.domId + " style = \"position:absolute;top:" + positionTop + ";left:" + positionLeft + ";height:" + this.r * 2 + "; width:" + this.r * 2 + "; border:1px solid; border-radius:" + this.r + "px\"" + "></div>" ;
   }
 
   Ball.prototype.render = function() {

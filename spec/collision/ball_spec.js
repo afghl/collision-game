@@ -15,7 +15,12 @@ describe("Ball", function() {
 
   afterEach(function() {
     jasmine.clock().uninstall();
-  })
+  });
+
+  expectDomPositionMatch = function(ball) {
+    pos = ball.$container.find('#' + ball.domId).position();
+    expect([pos.left + ball.r, pos.top + ball.r]).toEqual(ball.position);
+  }
 
   it("has expected attributes", function() {
     expect(ball.r).toEqual(5);
@@ -39,23 +44,35 @@ describe("Ball", function() {
 
   it("will be drawed in expected position", function() {
     ball.render();
-    pos = $('#ball-1').position();
-    expect([pos.top, pos.left]).toEqual(ball.position);
+    expectDomPositionMatch(ball);
   })
 
   it("will run", function() {
     ball.render().kickOff();
     jasmine.clock().tick(51);
-    pos = ball.$container.find('#ball-1').position()
     expect(ball.position).toEqual([9, 13]);
-    expect([pos.top, pos.left]).toEqual(ball.position);
+    expectDomPositionMatch(ball);
   })
 
   it("should keep running", function() {
     ball.render().kickOff();
     jasmine.clock().tick(101);
-    pos = ball.$container.find('#ball-1').position()
     expect(ball.position).toEqual([13, 19]);
-    expect([pos.top, pos.left]).toEqual(ball.position);
+    expectDomPositionMatch(ball);
+  })
+
+  describe("when two balls", function() {
+    beforeEach(function() {
+      ball1 = new Ball({ domId: 'ball-1', radius: 5, position: [905, 500], mass: 10, velocity: [10, 0] });
+      ball2 = new Ball({ domId: 'ball-2', radius: 30, position: [940, 500], mass: 40, velocity: [-10, 0] });
+    });
+
+    it("will cause a collision when touch another ball", function() {
+      ball1.render().kickOff();
+      ball2.render().kickOff();
+      jasmine.clock().tick(51);
+      expect(ball1.v).toEqual([-22, 0]);
+      expect(ball2.v).toEqual([-4, 0]);
+    })
   })
 });
