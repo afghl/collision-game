@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var CollisionHelper = require('./collision_helper.js');
 
 var Ball = (function() {
   function Ball(options) {
@@ -8,7 +9,10 @@ var Ball = (function() {
     this.m = options.mass;
     this.v = options.velocity;
     this.$container = $("<div class='ball'></div>")
+    Ball.allBalls.push(this);
   }
+
+  if (Ball.allBalls == null) { Ball.allBalls = []; }
 
   Ball.prototype.updateTemplate = function() {
     positionLeft = this.position[0] - this.r;
@@ -25,12 +29,32 @@ var Ball = (function() {
   Ball.prototype.kickOff = function() {
     self = this;
     timer = setInterval(function (){
-      positionX = self.position[0] + self.v[0]
-      positionY = self.position[1] + self.v[1]
-      self.position = [positionX, positionY];
+      self.detectCollision();
+      self.run();
       self.render();
     }, 50);
     return this;
+  }
+
+  Ball.prototype.detectCollision = function() {
+    self = this;
+    $.each(Ball.allBalls, function(index, ball) {
+      if (ball == self) { return; }
+
+      distance = Math.sqrt(Math.pow(self.position[0] - ball.position[0], 2) + Math.pow(self.position[1] - ball.position[1], 2))
+
+      if(distance > self.r + ball.r) { return; }
+
+      newVelocity = CollisionHelper.calculateVelocity({v: self.v, m: self.m}, {v: ball.v, m: ball.m})
+      self.v = newVelocity.object1velocity;
+      ball.v = newVelocity.object2velocity;
+    })
+  }
+
+  Ball.prototype.run = function() {
+    positionX = this.position[0] + this.v[0];
+    positionY = this.position[1] + this.v[1];
+    this.position = [positionX, positionY];
   }
 
   return Ball;

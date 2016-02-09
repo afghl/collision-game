@@ -3,6 +3,7 @@ describe("Ball", function() {
   var Ball = CollisionGame.Ball;
 
   beforeEach(function() {
+    Ball.allBalls = [];
     ball = new Ball({
       domId: 'ball-1',
       radius: 5,
@@ -63,6 +64,7 @@ describe("Ball", function() {
 
   describe("when two balls", function() {
     beforeEach(function() {
+      Ball.allBalls = [];
       ball1 = new Ball({ domId: 'ball-1', radius: 5, position: [905, 500], mass: 10, velocity: [10, 0] });
       ball2 = new Ball({ domId: 'ball-2', radius: 30, position: [940, 500], mass: 40, velocity: [-10, 0] });
     });
