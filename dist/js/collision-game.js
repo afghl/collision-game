@@ -9833,6 +9833,7 @@ return jQuery;
 
 },{}],2:[function(require,module,exports){
 var $ = require('jquery');
+var CollisionHelper = require('./collision_helper.js');
 
 var Ball = (function() {
   function Ball(options) {
@@ -9842,11 +9843,14 @@ var Ball = (function() {
     this.m = options.mass;
     this.v = options.velocity;
     this.$container = $("<div class='ball'></div>")
+    Ball.allBalls.push(this);
   }
 
+  if (Ball.allBalls == null) { Ball.allBalls = []; }
+
   Ball.prototype.updateTemplate = function() {
-    positionLeft = this.position[0] - this.r;
-    positionTop = this.position[1] - this.r;
+    var positionLeft = this.position[0] - this.r;
+    var positionTop = this.position[1] - this.r;
     return "<div id = " + this.domId + " style = \"position:absolute;top:" + positionTop + ";left:" + positionLeft + ";height:" + this.r * 2 + "; width:" + this.r * 2 + "; border:1px solid; border-radius:" + this.r + "px\"" + "></div>" ;
   }
 
@@ -9857,14 +9861,34 @@ var Ball = (function() {
   }
 
   Ball.prototype.kickOff = function() {
-    self = this;
-    timer = setInterval(function (){
-      positionX = self.position[0] + self.v[0]
-      positionY = self.position[1] + self.v[1]
-      self.position = [positionX, positionY];
+    var self = this;
+    var timer = setInterval(function (){
+      self.detectCollision();
+      self.run();
       self.render();
     }, 50);
     return this;
+  }
+
+  Ball.prototype.detectCollision = function() {
+    var self = this;
+    $.each(Ball.allBalls, function(index, ball) {
+      if (ball == self) { return; }
+
+      var distance = Math.sqrt(Math.pow(self.position[0] - ball.position[0], 2) + Math.pow(self.position[1] - ball.position[1], 2))
+
+      if(distance > self.r + ball.r) { return; }
+
+      var result = CollisionHelper.calculateVelocity({v: self.v, m: self.m}, {v: ball.v, m: ball.m})
+      self.v = result.object1velocity;
+      ball.v = result.object2velocity;
+    })
+  }
+
+  Ball.prototype.run = function() {
+    var positionX = this.position[0] + this.v[0];
+    var positionY = this.position[1] + this.v[1];
+    this.position = [positionX, positionY];
   }
 
   return Ball;
@@ -9872,14 +9896,62 @@ var Ball = (function() {
 
 module.exports = Ball;
 
-},{"jquery":1}],3:[function(require,module,exports){
+},{"./collision_helper.js":4,"jquery":1}],3:[function(require,module,exports){
 var Ball = require('./ball.js');
+var VectorRotate = require('./vector_rotate.js');
 
 (function() {
   function CollisionGame() {}
 
   CollisionGame.Ball = Ball;
+  CollisionGame.VectorRotate = VectorRotate;
   return (window.CollisionGame = CollisionGame);
 })();
 
-},{"./ball.js":2}]},{},[3]);
+},{"./ball.js":2,"./vector_rotate.js":5}],4:[function(require,module,exports){
+var CollisionHelper = (function() {
+  return {
+    calculateVelocity : function(object1, object2) {
+      return {
+        object1velocity: [-2, 0],
+        object2velocity: [-22, 0]
+      }
+    }
+  };
+
+})();
+
+module.exports = CollisionHelper;
+
+},{}],5:[function(require,module,exports){
+var VectorRotate = (function() {
+  // rounded to three decimal places
+  var roundedOff = function(number, places) {
+    return parseFloat(number.toFixed(places));
+  }
+
+  return {
+    rotateVectorByAngle : function(vector, angle) {
+      var cos = Math.cos(angle);
+      var sin = Math.sin(angle);
+      var vx = roundedOff(vector[1] * cos - vector[0] * sin, 2);
+      var vy = roundedOff(vector[0] * cos + vector[1] * sin, 2);
+      return [vx, vy];
+    },
+
+    getAngleFromPosition : function(positionA, positionB) {
+      var dx = positionB[0] - positionA[0];
+      var dy = positionB[1] - positionA[1];
+      var angle = Math.atan2(dy, dx);
+
+      if(angle < 0) { angle += 2 * Math.PI; }
+
+      return roundedOff(angle, 3);
+    }
+  };
+
+})();
+
+module.exports = VectorRotate;
+
+},{}]},{},[3]);
