@@ -50,14 +50,14 @@ describe("Ball", function() {
 
   it("will run", function() {
     ball.render().kickOff();
-    jasmine.clock().tick(51);
+    jasmine.clock().tick(31);
     expect(ball.position).toEqual([9, 13]);
     expectDomPositionMatch(ball);
   })
 
   it("should keep running", function() {
     ball.render().kickOff();
-    jasmine.clock().tick(101);
+    jasmine.clock().tick(61);
     expect(ball.position).toEqual([13, 19]);
     expectDomPositionMatch(ball);
   })
@@ -72,7 +72,7 @@ describe("Ball", function() {
     it("will cause a collision when touch another ball", function() {
       ball1.render().kickOff();
       ball2.render().kickOff();
-      jasmine.clock().tick(51);
+      jasmine.clock().tick(31);
       expect(ball1.v).toEqual([-24, 0]);
       expect(ball2.v).toEqual([-3, 0]);
     })

@@ -1,7 +1,19 @@
 <html>
   <head>
     <title>collision-game demo</title>
+    <script src="../lib/jquery/jquery.min.js"></script>
     <script src="../dist/js/collision-game.js"></script>
+    <script>
+    $(function() {
+        CollisionGame.factory.createWall();
+
+        CollisionGame.factory.createBall({ domId: 'ball-1', radius: 40, position: [605, 500], mass: 30, velocity: [1, 5] });
+        CollisionGame.factory.createBall({ domId: 'ball-2', radius: 60, position: [890, 500], mass: 60, velocity: [-5, 4] });
+        CollisionGame.factory.createBall({ domId: 'ball-2', radius: 50, position: [605, 400], mass: 70, velocity: [20, 10] });
+
+        CollisionGame.start();
+      })
+    </script>
   </head>
   <body>
     <h1>collision-game demo</h1>

@@ -28,11 +28,18 @@ var Ball = (function() {
 
   Ball.prototype.kickOff = function() {
     var self = this;
-    var timer = setInterval(function (){
-      self.detectCollision();
-      self.run();
-      self.render();
-    }, 50);
+    setInterval(function (){
+      self.detectCollision().detectWallTouch().run().render();
+    }, 30);
+    return this;
+  }
+
+  Ball.prototype.detectWallTouch = function() {
+    if((wall = Ball.wall) == null) { return this; }
+    if(this.position[0] + this.r >= wall.right) this.v = [-Math.abs(this.v[0]), this.v[1]];
+    if(this.position[0] - this.r <= wall.left) this.v = [Math.abs(this.v[0]), this.v[1]];
+    if(this.position[1] + this.r >= wall.bottom) this.v = [this.v[0], -Math.abs(this.v[1])];
+    if(this.position[1] - this.r <= wall.top) this.v = [this.v[0], Math.abs(this.v[1])];
     return this;
   }
 
@@ -47,12 +54,14 @@ var Ball = (function() {
 
       CollisionResolver.handleCollision(self, ball);
     })
+    return this;
   }
 
   Ball.prototype.run = function() {
     var positionX = this.position[0] + this.v[0];
     var positionY = this.position[1] + this.v[1];
     this.position = [positionX, positionY];
+    return this;
   }
 
   return Ball;
