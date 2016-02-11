@@ -8,9 +8,13 @@ var VectorRotate = (function() {
     rotateVectorByAngle : function(vector, angle) {
       var cos = Math.cos(angle);
       var sin = Math.sin(angle);
-      var vx = roundedOff(vector[1] * cos - vector[0] * sin, 2);
-      var vy = roundedOff(vector[0] * cos + vector[1] * sin, 2);
+      var vx = roundedOff(vector[0] * cos - vector[1] * sin, 0);
+      var vy = roundedOff(vector[1] * cos + vector[0] * sin, 0);
       return [vx, vy];
+    },
+
+    revertRotated : function(vector, angle) {
+      return this.rotateVectorByAngle(vector, -angle);
     },
 
     getAngleFromPosition : function(positionA, positionB) {

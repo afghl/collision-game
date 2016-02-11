@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var CollisionHelper = require('./collision_helper.js');
+var CollisionResolver = require('./collision_resolver.js');
 
 var Ball = (function() {
   function Ball(options) {
@@ -45,9 +45,7 @@ var Ball = (function() {
 
       if(distance > self.r + ball.r) { return; }
 
-      var result = CollisionHelper.calculateVelocity({v: self.v, m: self.m}, {v: ball.v, m: ball.m})
-      self.v = result.object1velocity;
-      ball.v = result.object2velocity;
+      CollisionResolver.handleCollision(self, ball);
     })
   }
 

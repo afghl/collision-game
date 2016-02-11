@@ -66,15 +66,15 @@ describe("Ball", function() {
     beforeEach(function() {
       Ball.allBalls = [];
       ball1 = new Ball({ domId: 'ball-1', radius: 5, position: [905, 500], mass: 10, velocity: [10, 0] });
-      ball2 = new Ball({ domId: 'ball-2', radius: 30, position: [940, 500], mass: 40, velocity: [-10, 0] });
+      ball2 = new Ball({ domId: 'ball-2', radius: 30, position: [940, 500], mass: 40, velocity: [-11, 0] });
     });
 
-    xit("will cause a collision when touch another ball", function() {
+    it("will cause a collision when touch another ball", function() {
       ball1.render().kickOff();
       ball2.render().kickOff();
       jasmine.clock().tick(51);
-      expect(ball1.v).toEqual([-22, 0]);
-      expect(ball2.v).toEqual([-2, 0]);
+      expect(ball1.v).toEqual([-24, 0]);
+      expect(ball2.v).toEqual([-3, 0]);
     })
   })
 });
