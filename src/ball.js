@@ -45,9 +45,9 @@ var Ball = (function() {
 
       if(distance > self.r + ball.r) { return; }
 
-      newVelocity = CollisionHelper.calculateVelocity({v: self.v, m: self.m}, {v: ball.v, m: ball.m})
-      self.v = newVelocity.object1velocity;
-      ball.v = newVelocity.object2velocity;
+      result = CollisionHelper.calculateVelocity({v: self.v, m: self.m}, {v: ball.v, m: ball.m})
+      self.v = result.object1velocity;
+      ball.v = result.object2velocity;
     })
   }
 

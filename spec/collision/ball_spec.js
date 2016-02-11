@@ -74,7 +74,7 @@ describe("Ball", function() {
       ball2.render().kickOff();
       jasmine.clock().tick(51);
       expect(ball1.v).toEqual([-22, 0]);
-      expect(ball2.v).toEqual([-4, 0]);
+      expect(ball2.v).toEqual([-2, 0]);
     })
   })
 });
